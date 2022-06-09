@@ -3,6 +3,15 @@
 
 //Init Hook for the custom post type
  
+add_action('wp_enqueue_scripts', 'auto_scripts');
+function auto_scripts()
+{
+       wp_enqueue_script('jquery');
+}
+
+
+
+
 add_action('init', 'create_post_type');
  
 function create_post_type() {
@@ -118,14 +127,6 @@ return $result;
 add_shortcode('mycode','create_shortcode_post_type');
 
 
-
-
-/*
- ==================
- Ajax Search
-======================	 
-*/
-// add the ajax fetch js
 add_action( 'wp_footer', 'ajax_fetch' );
 function ajax_fetch() {
 ?>
@@ -143,30 +144,40 @@ function fetch(){
 
 }
 </script>
-
 <?php
 }
+
+
+
+// add the ajax fetch js
+
 
 // the ajax function
 add_action('wp_ajax_data_fetch' , 'data_fetch');
 add_action('wp_ajax_nopriv_data_fetch','data_fetch');
-function data_fetch(){
 
-    $the_query = new WP_Query( array( 'posts_per_page' => -1, 's' => esc_attr( $_POST['keyword'] ), 'post_type' => array('create_post_type') ) );
+function data_fetch() {
+    $the_query = new WP_Query( array( 'posts_per_page' => 3, 's' => esc_attr( $_POST['keyword'] ), 'post_type' => array('news') ) );
     if( $the_query->have_posts() ) :
-        echo '<ul>';
-        while( $the_query->have_posts() ): $the_query->the_post(); ?>
-
-            <li><a href="<?php echo esc_url( post_permalink() ); ?>"><?php the_title();?></a></li>
-
-        <?php endwhile;
-       echo '</ul>';
+        
+        while( $the_query->have_posts() ): $the_query->the_post();     
+        ?>
+        <div class="row">
+            <div> 
+                <h1 style="text-align: center;"> <a href=" <?php the_permalink(); ?> "> <?php the_title(); ?></a></h1>
+                <a href="<?php the_permalink(); ?> ">  <?php the_post_thumbnail();?> </a>
+                <p style="text-align: center;" ><?php the_content(); ?></p>
+            </div>       
+            </div>
+            
+            <?php   
+        endwhile; 
         wp_reset_postdata();  
     endif;
 
+    
     die();
 }
-
 
 
 ?>
