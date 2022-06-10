@@ -6,7 +6,10 @@
 add_action('wp_enqueue_scripts', 'auto_scripts');
 function auto_scripts()
 {
-       wp_enqueue_script('jquery');
+
+wp_enqueue_script('cus_js',get_stylesheet_directory_uri()."/jq.js",array('jquery'));
+wp_localize_script('cus_js','ajax_obj',array('ajaxurl'=>admin_url('admin-ajax.php')));
+    
 }
 
 
@@ -127,25 +130,6 @@ return $result;
 add_shortcode('mycode','create_shortcode_post_type');
 
 
-add_action( 'wp_footer', 'ajax_fetch' );
-function ajax_fetch() {
-?>
-<script type="text/javascript">
-function fetch(){
-
-    jQuery.ajax({
-        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-        type: 'post',
-        data: { action: 'data_fetch', keyword: jQuery('#keyword').val() },
-        success: function(data) {
-            jQuery('#datafetch').html( data );
-        }
-    });
-
-}
-</script>
-<?php
-}
 
 
 

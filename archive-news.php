@@ -7,7 +7,7 @@ get_header();   ?>
  
 <div class="search_bar">
     <form action="/" method="get" autocomplete="off">
-        <input type="text" name="s" placeholder="Search Code..." id="keyword" class="input_search" onkeyup="fetch()"> 
+        <input type="text" name="s" placeholder="Search Code..." id="keyword" class="input_search"> 
     </form> 
     
 </div>
