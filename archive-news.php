@@ -10,7 +10,17 @@ get_header();   ?>
         <input type="text" name="s" placeholder="Search Code..." id="keyword" class="input_search"> 
     </form> 
     
+
+
 </div>
+<select id="selection" >
+    <option value="null"></option>
+    <option value="asc">Ascending Order</option>
+    <option value="desc">Decending Order</option>
+    <option value="old">Oldest</option>
+    <option value="new" >Newest</option>
+</select>
+
 
 <div class="wrap">
     <div id="primary" class="content_area">

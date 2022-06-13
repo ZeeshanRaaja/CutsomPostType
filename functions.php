@@ -7,7 +7,7 @@ add_action('wp_enqueue_scripts', 'auto_scripts');
 function auto_scripts()
 {
 
-wp_enqueue_script('cus_js',get_stylesheet_directory_uri()."/jq.js",array('jquery'));
+wp_enqueue_script('cus_js',get_stylesheet_directory_uri()."/jq.js",array('jquery'), wp_rand());
 wp_localize_script('cus_js','ajax_obj',array('ajaxurl'=>admin_url('admin-ajax.php')));
     
 }
@@ -161,6 +161,68 @@ function data_fetch() {
 
     
     die();
+}
+
+
+add_action('wp_ajax_select' , 'select');
+add_action('wp_ajax_nopriv_select' , 'select');
+
+function select()
+{
+    $args = array( 
+        'post_status' => 'publish',
+        'orderby' => 'title',
+        'order' => 'DESC',
+        'posts_per_page' => '3',
+        'post_type' => array('news') );
+
+        if($_POST["keyword"] == "null") 
+        {
+            $args['orderby'] = 'date';
+            $args['order'] = 'ASC';
+        } 
+        if($_POST["keyword"] == "asc") 
+        {
+            $args['order'] = 'ASC';
+        } 
+        if($_POST["keyword"] == "desc") 
+        {
+            $args['order'] = 'DESC';
+        }  
+        if($_POST["keyword"] == "old") 
+        {
+            $args['orderby'] = 'date';
+            $args['order'] = 'ASC';
+        }
+        if($_POST["keyword"] == "new") 
+        {
+            $args['orderby'] = 'date';
+            $args['order'] = 'DESC';
+        } 
+
+    $the_query = new WP_Query( $args );
+    if( $the_query->have_posts() ) :
+        ob_start();
+        while( $the_query->have_posts() ): $the_query->the_post();  ?>
+        
+<div> 
+    <h1 style="text-align: center;"> <a style="align-items: center;" href=" <?php the_permalink(); ?> "> <?php the_title(); ?></a></h2></h1>
+    <a href=" <?php the_permalink(); ?> ">  <?php the_post_thumbnail();?> </a>
+    <p style="text-align: center;" ><?php the_content(); ?></p>  
+</div>  
+    <?php  
+        endwhile; 
+
+        $output_string = ob_get_contents();
+        ob_end_clean();
+        wp_die($output_string); 
+        wp_reset_postdata(); 
+
+    endif;
+    die();
+
+
+
 }
 
 
